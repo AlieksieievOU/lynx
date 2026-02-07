@@ -1,0 +1,16 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 1071 296" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 2">
+<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M249 0C226.909 0 209 17.9086 209 40H188C143.817 40 108 75.8172 108 120H29C20.1634 120 13 127.163 13 136V194.281C5.59742 195.685 0 202.189 0 210V216C0 224.837 7.16344 232 16 232H29H37H309V120V40V16.5016C309 7.38804 301.612 0 292.498 0H249Z" fill="var(--fill-0, #616161)"/>
+<circle id="Ellipse 2" cx="85" cy="242" r="51" fill="var(--fill-0, #616161)" stroke="var(--stroke-0, #FCFCFC)" stroke-width="6"/>
+<path id="Rectangle 13" d="M309 199H612.5C621.613 199 629 206.387 629 215.5C629 224.613 621.613 232 612.5 232H309V199Z" fill="var(--fill-0, #616161)"/>
+<g id="Group 3">
+<path id="Rectangle 14" d="M779 180H331C327.134 180 324 183.134 324 187C324 190.866 327.134 194 331 194H779V180Z" fill="var(--fill-0, #616161)"/>
+<path id="Rectangle 9" d="M775 180H1071C1071 202.644 1052.64 221 1030 221H816C793.356 221 775 202.644 775 180Z" fill="var(--fill-0, #616161)"/>
+<circle id="Ellipse 5" cx="859" cy="242" r="51" fill="var(--fill-0, #616161)" stroke="var(--stroke-0, #FCFCFC)" stroke-width="6"/>
+<circle id="Ellipse 6" cx="986" cy="242" r="51" fill="var(--fill-0, #616161)" stroke="var(--stroke-0, #FCFCFC)" stroke-width="6"/>
+</g>
+<circle id="Ellipse 7" cx="490.5" cy="197" r="10" fill="var(--fill-0, #616161)" stroke="var(--stroke-0, #FCFCFC)" stroke-width="6"/>
+<circle id="Ellipse 4" cx="554" cy="242" r="51" fill="var(--fill-0, #616161)" stroke="var(--stroke-0, #FCFCFC)" stroke-width="6"/>
+<circle id="Ellipse 3" cx="427" cy="242" r="51" fill="var(--fill-0, #616161)" stroke="var(--stroke-0, #FCFCFC)" stroke-width="6"/>
+</g>
+</svg>

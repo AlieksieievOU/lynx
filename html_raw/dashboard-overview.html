@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LYNX Permits - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#fcfcfc] text-[#0d0d0e]">
+    <div class="min-h-screen bg-[#fcfcfc] flex">
+        <!-- Sidebar -->
+        <aside class="w-[196px] h-screen bg-white border-r border-gray-100 flex flex-col fixed left-0 top-0 z-50 shadow-[2px_2px_10px_0px_rgba(0,0,0,0.07)]">
+            <div class="p-8 flex justify-center">
+                <a href="home.html" class="w-[96px] mix-blend-darken">
+                    <img src="images/logo-dark.png" alt="LYNX PERMITS INC" class="w-full h-auto">
+                </a>
+            </div>
+            <nav class="flex-1 flex flex-col gap-2 pr-2">
+                <a href="home.html" class="flex items-center gap-2 px-4 py-3 text-[#0d0d0e] hover:bg-gray-50 rounded-tr-[32px] rounded-br-[32px] transition-all">
+                    <span class="font-medium text-[18px]">Home</span>
+                </a>
+                <a href="dashboard-regulations.html" class="flex items-center gap-2 px-4 py-3 text-[#0d0d0e] hover:bg-gray-50 rounded-tr-[32px] rounded-br-[32px] transition-all">
+                    <span class="font-medium text-[18px]">States Dimensions</span>
+                </a>
+                <a href="dashboard-overview.html" class="flex items-center gap-2 px-4 py-3 bg-[#0d0d0e] text-[#fcfcfc] rounded-tr-[32px] rounded-br-[32px] transition-all">
+                    <span class="font-medium text-[18px]">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-2 px-4 py-3 text-[#0d0d0e] hover:bg-gray-50 rounded-tr-[32px] rounded-br-[32px] transition-all">
+                    <span class="font-medium text-[18px]">Order Oversize</span>
+                </a>
+            </nav>
+            <div class="p-4 flex flex-col gap-2">
+                <button class="flex items-center gap-2 px-4 py-3 text-red-500 hover:bg-red-50 rounded-[32px] transition-all font-medium text-[18px]">
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-[196px] p-12 min-h-screen">
+            <div class="max-w-[1600px] mx-auto space-y-12">
+                <header class="flex justify-between items-center">
+                    <h1 class="text-[40px] font-semibold text-[#0d0d0e]">Dashboard Overview</h1>
+                    <div class="flex items-center gap-6">
+                        <div class="relative w-[320px]">
+                            <input type="text" placeholder="Search for permits..." class="w-full bg-white border border-gray-100 rounded-full px-6 py-3 shadow-sm focus:outline-none focus:ring-1 focus:ring-black">
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-8 rounded-[32px] shadow-[2px_2px_12px_0px_rgba(0,0,0,0.07)] border border-gray-50 space-y-4">
+                        <p class="text-gray-500 text-lg">Active Permits</p>
+                        <p class="text-4xl font-bold">12</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[32px] shadow-[2px_2px_12px_0px_rgba(0,0,0,0.07)] border border-gray-50 space-y-4">
+                        <p class="text-gray-500 text-lg">Pending Orders</p>
+                        <p class="text-4xl font-bold">4</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[32px] shadow-[2px_2px_12px_0px_rgba(0,0,0,0.07)] border border-gray-50 space-y-4">
+                        <p class="text-gray-500 text-lg">Maintenance Tasks</p>
+                        <p class="text-4xl font-bold">3</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[32px] shadow-[2px_2px_12px_0px_rgba(0,0,0,0.07)] border border-gray-50 space-y-4">
+                        <p class="text-gray-500 text-lg">Safety Rating</p>
+                        <p class="text-4xl font-bold text-green-500">Satisfactory</p>
+                    </div>
+                </div>
+
+                <!-- Table Placeholder -->
+                <div class="bg-white rounded-[32px] shadow-[2px_2px_12px_0px_rgba(0,0,0,0.07)] border border-gray-50 overflow-hidden">
+                    <div class="p-8 border-b border-gray-50 flex justify-between items-center">
+                        <h2 class="text-2xl font-semibold">Active Permits</h2>
+                        <button class="text-[#0d0d0e] font-medium hover:underline">View All</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 text-left">
+                                <tr>
+                                    <th class="px-8 py-4 font-semibold">Permit #</th>
+                                    <th class="px-8 py-4 font-semibold">State</th>
+                                    <th class="px-8 py-4 font-semibold">Type</th>
+                                    <th class="px-8 py-4 font-semibold">Expires</th>
+                                    <th class="px-8 py-4 font-semibold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-50">
+                                    <td class="px-8 py-6">OS-2024-001</td>
+                                    <td class="px-8 py-6">Illinois</td>
+                                    <td class="px-8 py-6">Oversize Load</td>
+                                    <td class="px-8 py-6">Feb 15, 2026</td>
+                                    <td class="px-8 py-6"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Active</span></td>
+                                </tr>
+                                <tr class="border-b border-gray-50">
+                                    <td class="px-8 py-6">OW-2024-042</td>
+                                    <td class="px-8 py-6">Texas</td>
+                                    <td class="px-8 py-6">Overweight</td>
+                                    <td class="px-8 py-6">Feb 10, 2026</td>
+                                    <td class="px-8 py-6"><span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
