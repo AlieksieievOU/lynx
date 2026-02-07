@@ -32,7 +32,7 @@ const figmaAssetPlugin = {
 }
 
 export default defineConfig({
-  base: './', // Add this line
+  base: '/lynx/',
   plugins: [
     react(),
     tailwindcss(),
