@@ -3,7 +3,6 @@ import * as z from "zod";
 import emailjs from "@emailjs/browser";
 import svgPaths from "@/imports/svg-keksqji0xd";
 
-// Define the schema for validation
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
@@ -21,7 +20,6 @@ type FormState = {
 };
 
 export const ContactReachOut = () => {
-  // Action function for React 19
   async function contactAction(prevState: FormState | null, formData: FormData): Promise<FormState> {
     const data = {
       name: formData.get("name") as string,
@@ -29,7 +27,6 @@ export const ContactReachOut = () => {
       phone: formData.get("phone") as string,
     };
 
-    // 1. Validate with Zod
     const validatedFields = contactSchema.safeParse(data);
 
     if (!validatedFields.success) {
@@ -39,7 +36,6 @@ export const ContactReachOut = () => {
       };
     }
 
-    // 2. Integration with EmailJS using environment variables
     try {
       const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
       const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
