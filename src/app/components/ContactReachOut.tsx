@@ -5,7 +5,7 @@ import svgPaths from "@/imports/svg-keksqji0xd";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
+  email: z.email("Please enter a valid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
 });
 
