@@ -10,14 +10,6 @@ This project uses Telegram Bot API to send form submissions directly to a Telegr
 - ✅ Formatted messages with emojis for better readability
 - ✅ Reusable utility functions for all forms
 
-Done! Congratulations on your new bot. You will find it at t.me/lynx_permits_notifier_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
-
-Use this token to access the HTTP API:
-8365971717:AAGMeu-g2_5FxMxLtYahfCUjfrNwLSkHtTk
-Keep your token secure and store it safely, it can be used by anyone to control your bot.
-
-For a description of the Bot API, see this page: https://core.telegram.org/bots/api
-
 ## 🚀 Setup Instructions
 
 ### Step 1: Create a Telegram Bot
@@ -27,7 +19,7 @@ For a description of the Bot API, see this page: https://core.telegram.org/bots/
 3. Follow the instructions:
    - Choose a name for your bot (e.g., "Lynx Permits Notifier")
    - Choose a username (must end in 'bot', e.g., "lynx_permits_notifier_bot")
-4. **Save the Bot Token** you receive (format: `8365971717:AAGMeu-g2_5FxMxLtYahfCUjfrNwLSkHtTk`)
+4. **Save the Bot Token** you receive (format: ``)
 
 ### Step 2: Create or Use a Telegram Group
 
@@ -46,7 +38,7 @@ There are two methods to get your group's Chat ID:
 #### Method A: Using @RawDataBot (Easiest)
 
 1. Add `@RawDataBot` to your group
-2. The bot will immediately send a message showing the **Chat ID** (e.g., `-1003821640226`)
+2. The bot will immediately send a message showing the **Chat ID** (e.g., `-1003821640226111`)
 3. Copy the Chat ID
 4. Remove `@RawDataBot` from the group (you don't need it anymore)
 
@@ -57,7 +49,7 @@ There are two methods to get your group's Chat ID:
    ```
    https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates
    ```
-3. Look for `"chat":{"id":-1003821640226}` in the JSON response
+3. Look for `"chat":{"id":-1003821640226111}` in the JSON response
 4. Copy the Chat ID (the negative number)
 
 ### Step 4: Configure Environment Variables
@@ -67,7 +59,7 @@ Add these variables to your `.env` file:
 ```env
 # Telegram Bot Configuration
 VITE_TELEGRAM_BOT_TOKEN=123456789:ABCdefGhIjKlmNoPqRsTuVwXyZ
-VITE_TELEGRAM_CHAT_ID=-1003821640226
+VITE_TELEGRAM_CHAT_ID=-1003821640226111s
 ```
 
 **Important Notes:**
