@@ -40,3 +40,6 @@ build/
 
 # Vite
 vite.config.ts.timestamp-*
+
+# Telegram Desktop cache/downloads
+Telegram Desktop/
