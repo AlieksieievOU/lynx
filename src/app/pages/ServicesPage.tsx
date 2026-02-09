@@ -6,6 +6,7 @@ import imgRectangle3 from "figma:asset/a61126b921a7f971cb0c9e1c78ee242c540f4bc5.
 import imgRectangle4 from "figma:asset/f2bd0d9ad5da0588547a204b062cf500bcf2f8b4.png";
 import imgRectangle5 from "figma:asset/744654926be46090c598f8028f68b208794304c3.png";
 import svgPaths from "@/imports/svg-vm6ql5682x";
+import { sendTelegramMessage, formatServiceMessage } from "@/utils/telegram";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -71,7 +72,8 @@ export const ServicesPage = () => {
         return { message: "System configuration error." };
       }
 
-      await emailjs.send(
+      // Send to both EmailJS and Telegram in parallel
+      const emailPromise = emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
         {
@@ -85,9 +87,41 @@ export const ServicesPage = () => {
         PUBLIC_KEY
       );
 
-      return { success: true, message: "Thank you! We'll be in touch." };
+      const telegramPromise = sendTelegramMessage(
+        formatServiceMessage({
+          name: validatedFields.data.name,
+          email: validatedFields.data.email,
+          phone: validatedFields.data.phone,
+          service: validatedFields.data.subject,
+          message: validatedFields.data.message,
+        })
+      );
+
+      // Wait for both to complete, but don't fail if one fails
+      const results = await Promise.allSettled([emailPromise, telegramPromise]);
+
+      const emailResult = results[0];
+      const telegramResult = results[1];
+
+      // Track which services succeeded
+      const emailSuccess = emailResult.status === 'fulfilled';
+      const telegramSuccess = telegramResult.status === 'fulfilled';
+
+      if (!emailSuccess) {
+        console.error("EmailJS Error:", emailResult.reason);
+      }
+      if (!telegramSuccess) {
+        console.error("Telegram Error:", telegramResult.reason);
+      }
+
+      // If at least one succeeded, consider it a success
+      if (emailSuccess || telegramSuccess) {
+        return { success: true, message: "Thank you! We'll be in touch." };
+      } else {
+        return { message: "Error sending message. Please try again or contact us directly." };
+      }
     } catch (error) {
-      console.error("EmailJS Error:", error);
+      console.error("Unexpected Error:", error);
       return { message: "Error sending message. Please try again." };
     }
   }

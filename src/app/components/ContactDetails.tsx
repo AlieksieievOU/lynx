@@ -2,10 +2,11 @@ import React, { useActionState } from "react";
 import * as z from "zod";
 import emailjs from "@emailjs/browser";
 import svgPaths from "@/imports/svg-keksqji0xd";
+import { sendTelegramMessage, formatServiceMessage } from "@/utils/telegram";
 
 const detailsSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
+  email: z.email("Please enter a valid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   subject: z.string().min(3, "Subject must be at least 3 characters"),
   message: z.string().min(10, "Message must be at least 10 characters"),
@@ -52,7 +53,8 @@ export const ContactDetails = () => {
         return { message: "System configuration error." };
       }
 
-      await emailjs.send(
+      // Send to both EmailJS and Telegram in parallel
+      const emailPromise = emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
         {
@@ -66,9 +68,41 @@ export const ContactDetails = () => {
         PUBLIC_KEY
       );
 
-      return { success: true, message: "Thank you! Your message has been sent." };
+      const telegramPromise = sendTelegramMessage(
+        formatServiceMessage({
+          name: validatedFields.data.name,
+          email: validatedFields.data.email,
+          phone: validatedFields.data.phone,
+          service: validatedFields.data.subject,
+          message: validatedFields.data.message,
+        })
+      );
+
+      // Wait for both to complete, but don't fail if one fails
+      const results = await Promise.allSettled([emailPromise, telegramPromise]);
+
+      const emailResult = results[0];
+      const telegramResult = results[1];
+
+      // Track which services succeeded
+      const emailSuccess = emailResult.status === 'fulfilled';
+      const telegramSuccess = telegramResult.status === 'fulfilled';
+
+      if (!emailSuccess) {
+        console.error("EmailJS Error:", emailResult.reason);
+      }
+      if (!telegramSuccess) {
+        console.error("Telegram Error:", telegramResult.reason);
+      }
+
+      // If at least one succeeded, consider it a success
+      if (emailSuccess || telegramSuccess) {
+        return { success: true, message: "Thank you! Your message has been sent." };
+      } else {
+        return { message: "Something went wrong. Please try again or contact us directly." };
+      }
     } catch (error) {
-      console.error("EmailJS Error:", error);
+      console.error("Unexpected Error:", error);
       return { message: "Something went wrong. Please try again later." };
     }
   }

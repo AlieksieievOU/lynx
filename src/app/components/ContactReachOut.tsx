@@ -2,6 +2,7 @@ import React, { useActionState } from "react";
 import * as z from "zod";
 import emailjs from "@emailjs/browser";
 import svgPaths from "@/imports/svg-keksqji0xd";
+import { sendTelegramMessage, formatContactMessage } from "@/utils/telegram";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -46,7 +47,8 @@ export const ContactReachOut = () => {
         return { message: "System configuration error. Please contact support." };
       }
 
-      await emailjs.send(
+      // Send to both EmailJS and Telegram in parallel
+      const emailPromise = emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
         {
@@ -59,10 +61,41 @@ export const ContactReachOut = () => {
         PUBLIC_KEY
       );
 
-      return { success: true, message: "Thank you! We will contact you soon." };
+      const telegramPromise = sendTelegramMessage(
+        formatContactMessage({
+          name: validatedFields.data.name,
+          email: validatedFields.data.email,
+          phone: validatedFields.data.phone,
+          formType: "Contact Reach Out",
+        })
+      );
+
+      // Wait for both to complete, but don't fail if one fails
+      const results = await Promise.allSettled([emailPromise, telegramPromise]);
+
+      const emailResult = results[0];
+      const telegramResult = results[1];
+
+      // Track which services succeeded
+      const emailSuccess = emailResult.status === 'fulfilled';
+      const telegramSuccess = telegramResult.status === 'fulfilled';
+
+      if (!emailSuccess) {
+        console.error("EmailJS Error:", emailResult.reason);
+      }
+      if (!telegramSuccess) {
+        console.error("Telegram Error:", telegramResult.reason);
+      }
+
+      // If at least one succeeded, consider it a success
+      if (emailSuccess || telegramSuccess) {
+        return { success: true, message: "Thank you! We will contact you soon." };
+      } else {
+        return { message: "Something went wrong. Please try again or contact us directly." };
+      }
     } catch (error) {
-      console.error("EmailJS Error:", error);
-      return { message: "Something went wrong sending the email. Please try again." };
+      console.error("Unexpected Error:", error);
+      return { message: "Something went wrong. Please try again." };
     }
   }
 
