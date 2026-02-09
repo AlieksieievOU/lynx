@@ -10,6 +10,7 @@ import { DiscoverNew } from "@/app/components/DiscoverNew";
 import { ContactDetails } from "@/app/components/ContactDetails";
 import { Footer } from "@/app/components/Footer";
 import { ServicesPage } from "@/app/pages/ServicesPage";
+import { PermitApplicationPage } from "@/app/pages/PermitApplicationPage";
 import { DashboardLayout } from "@/app/dashboard/DashboardLayout";
 import { DashboardOverview } from "@/app/dashboard/DashboardOverview";
 import { VehicleMaintenance } from "@/app/dashboard/VehicleMaintenance";
@@ -43,6 +44,7 @@ export default function App() {
         {/* Public Routes */}
         <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
         <Route path="/services" element={<MainLayout><ServicesPage /></MainLayout>} />
+        <Route path="/permit-application" element={<MainLayout><PermitApplicationPage /></MainLayout>} />
 
         {/* Dashboard Routes (Nested) */}
         <Route path="/dashboard" element={<DashboardLayout />}>

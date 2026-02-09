@@ -128,3 +128,52 @@ ${data.message ? `💬 <b>Message:</b>\n${data.message}` : ''}
 <i>Sent from Lynx Permits Website</i>
   `.trim();
 }
+
+/**
+ * Sends a PDF document to a Telegram chat
+ * @param pdfBlob - The PDF file as a Blob
+ * @param filename - The filename for the PDF
+ * @param caption - Optional caption for the document
+ * @returns Promise that resolves when document is sent
+ */
+export async function sendTelegramDocument(
+  pdfBlob: Blob,
+  filename: string,
+  caption?: string
+): Promise<void> {
+  const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+  const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+  if (!BOT_TOKEN || !CHAT_ID) {
+    console.error('Telegram configuration missing. Please set VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID');
+    throw new Error('Telegram configuration is incomplete');
+  }
+
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`;
+
+  // Create FormData for file upload
+  const formData = new FormData();
+  formData.append('chat_id', CHAT_ID);
+  formData.append('document', pdfBlob, filename);
+  
+  if (caption) {
+    formData.append('caption', caption);
+    formData.append('parse_mode', 'HTML');
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data: TelegramResponse = await response.json();
+
+    if (!data.ok) {
+      throw new Error(`Telegram API Error: ${data.description || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error('Failed to send Telegram document:', error);
+    throw error;
+  }
+}

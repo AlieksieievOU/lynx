@@ -2,7 +2,8 @@ import React, { useActionState } from "react";
 import * as z from "zod";
 import emailjs from "@emailjs/browser";
 import svgPaths from "@/imports/svg-keksqji0xd";
-import { sendTelegramMessage, formatContactMessage } from "@/utils/telegram";
+import { sendTelegramMessage, sendTelegramDocument, formatContactMessage } from "@/utils/telegram";
+import { generateContactPDF, generatePDFFilename } from "@/utils/pdfGenerator";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -47,7 +48,21 @@ export const ContactReachOut = () => {
         return { message: "System configuration error. Please contact support." };
       }
 
-      // Send to both EmailJS and Telegram in parallel
+      // Generate PDF from form data
+      const pdfBlob = generateContactPDF({
+        name: validatedFields.data.name,
+        email: validatedFields.data.email,
+        phone: validatedFields.data.phone,
+        formType: "Contact Reach Out",
+      });
+
+      const pdfFilename = generatePDFFilename({
+        name: validatedFields.data.name,
+        email: validatedFields.data.email,
+        phone: validatedFields.data.phone,
+      });
+
+      // Send to EmailJS, Telegram message, and Telegram PDF in parallel
       const emailPromise = emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
@@ -61,7 +76,7 @@ export const ContactReachOut = () => {
         PUBLIC_KEY
       );
 
-      const telegramPromise = sendTelegramMessage(
+      const telegramMessagePromise = sendTelegramMessage(
         formatContactMessage({
           name: validatedFields.data.name,
           email: validatedFields.data.email,
@@ -70,25 +85,40 @@ export const ContactReachOut = () => {
         })
       );
 
-      // Wait for both to complete, but don't fail if one fails
-      const results = await Promise.allSettled([emailPromise, telegramPromise]);
+      const telegramPDFPromise = sendTelegramDocument(
+        pdfBlob,
+        pdfFilename,
+        `📄 Contact Form Submission - ${validatedFields.data.name}`
+      );
+
+      // Wait for all to complete, but don't fail if one fails
+      const results = await Promise.allSettled([
+        emailPromise,
+        telegramMessagePromise,
+        telegramPDFPromise,
+      ]);
 
       const emailResult = results[0];
-      const telegramResult = results[1];
+      const telegramMessageResult = results[1];
+      const telegramPDFResult = results[2];
 
       // Track which services succeeded
       const emailSuccess = emailResult.status === 'fulfilled';
-      const telegramSuccess = telegramResult.status === 'fulfilled';
+      const telegramMessageSuccess = telegramMessageResult.status === 'fulfilled';
+      const telegramPDFSuccess = telegramPDFResult.status === 'fulfilled';
 
       if (!emailSuccess) {
         console.error("EmailJS Error:", emailResult.reason);
       }
-      if (!telegramSuccess) {
-        console.error("Telegram Error:", telegramResult.reason);
+      if (!telegramMessageSuccess) {
+        console.error("Telegram Message Error:", telegramMessageResult.reason);
+      }
+      if (!telegramPDFSuccess) {
+        console.error("Telegram PDF Error:", telegramPDFResult.reason);
       }
 
       // If at least one succeeded, consider it a success
-      if (emailSuccess || telegramSuccess) {
+      if (emailSuccess || telegramMessageSuccess || telegramPDFSuccess) {
         return { success: true, message: "Thank you! We will contact you soon." };
       } else {
         return { message: "Something went wrong. Please try again or contact us directly." };

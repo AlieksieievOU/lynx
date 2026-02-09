@@ -25,8 +25,17 @@ export const Navbar = () => {
             >
               Our Services
             </NavLink>
-            <a href="#contact" className="hover:text-black/70 transition-colors">Contact Us</a>
-            <a href="#order" className="hover:text-black/70 transition-colors">Permit order form</a>
+             <a href="#contact" className="hover:text-black/70 transition-colors">Contact Us</a>
+            <NavLink 
+              to="/permit-application" 
+              className={({ isActive }) => 
+                `hover:text-black/70 transition-colors ${isActive ? 'text-black border-b-2 border-black' : ''}`
+              }
+            >
+              Permit order form
+            </NavLink>
+           
+            {/* <a href="#order" className="hover:text-black/70 transition-colors">Permit order form</a> */}
             {/* <NavLink 
               to="/dashboard" 
               className={({ isActive }) => 
@@ -85,8 +94,15 @@ export const Navbar = () => {
               >
                 Our Services
               </NavLink>
+              <NavLink 
+                to="/permit-application" 
+                onClick={() => setIsMenuOpen(false)}
+                className={({ isActive }) => (isActive ? 'text-black border-l-4 border-black pl-4' : '')}
+              >
+                Permit order form
+              </NavLink>
               <a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact Us</a>
-              <a href="#order" onClick={() => setIsMenuOpen(false)}>Permit order form</a>
+              {/* <a href="#order" onClick={() => setIsMenuOpen(false)}>Permit order form</a> */}
               {/* <NavLink 
                 to="/dashboard" 
                 onClick={() => setIsMenuOpen(false)}

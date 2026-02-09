@@ -6,7 +6,8 @@ import imgRectangle3 from "figma:asset/a61126b921a7f971cb0c9e1c78ee242c540f4bc5.
 import imgRectangle4 from "figma:asset/f2bd0d9ad5da0588547a204b062cf500bcf2f8b4.png";
 import imgRectangle5 from "figma:asset/744654926be46090c598f8028f68b208794304c3.png";
 import svgPaths from "@/imports/svg-vm6ql5682x";
-import { sendTelegramMessage, formatServiceMessage } from "@/utils/telegram";
+import { sendTelegramMessage, sendTelegramDocument, formatServiceMessage } from "@/utils/telegram";
+import { generateContactPDF, generatePDFFilename } from "@/utils/pdfGenerator";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -72,7 +73,23 @@ export const ServicesPage = () => {
         return { message: "System configuration error." };
       }
 
-      // Send to both EmailJS and Telegram in parallel
+      // Generate PDF from form data
+      const pdfBlob = generateContactPDF({
+        name: validatedFields.data.name,
+        email: validatedFields.data.email,
+        phone: validatedFields.data.phone,
+        service: validatedFields.data.subject,
+        message: validatedFields.data.message,
+        formType: "Service Request",
+      });
+
+      const pdfFilename = generatePDFFilename({
+        name: validatedFields.data.name,
+        email: validatedFields.data.email,
+        phone: validatedFields.data.phone,
+      });
+
+      // Send to EmailJS, Telegram message, and Telegram PDF in parallel
       const emailPromise = emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
@@ -87,7 +104,7 @@ export const ServicesPage = () => {
         PUBLIC_KEY
       );
 
-      const telegramPromise = sendTelegramMessage(
+      const telegramMessagePromise = sendTelegramMessage(
         formatServiceMessage({
           name: validatedFields.data.name,
           email: validatedFields.data.email,
@@ -97,25 +114,40 @@ export const ServicesPage = () => {
         })
       );
 
-      // Wait for both to complete, but don't fail if one fails
-      const results = await Promise.allSettled([emailPromise, telegramPromise]);
+      const telegramPDFPromise = sendTelegramDocument(
+        pdfBlob,
+        pdfFilename,
+        `📄 Service Request - ${validatedFields.data.name}`
+      );
+
+      // Wait for all to complete, but don't fail if one fails
+      const results = await Promise.allSettled([
+        emailPromise,
+        telegramMessagePromise,
+        telegramPDFPromise,
+      ]);
 
       const emailResult = results[0];
-      const telegramResult = results[1];
+      const telegramMessageResult = results[1];
+      const telegramPDFResult = results[2];
 
       // Track which services succeeded
       const emailSuccess = emailResult.status === 'fulfilled';
-      const telegramSuccess = telegramResult.status === 'fulfilled';
+      const telegramMessageSuccess = telegramMessageResult.status === 'fulfilled';
+      const telegramPDFSuccess = telegramPDFResult.status === 'fulfilled';
 
       if (!emailSuccess) {
         console.error("EmailJS Error:", emailResult.reason);
       }
-      if (!telegramSuccess) {
-        console.error("Telegram Error:", telegramResult.reason);
+      if (!telegramMessageSuccess) {
+        console.error("Telegram Message Error:", telegramMessageResult.reason);
+      }
+      if (!telegramPDFSuccess) {
+        console.error("Telegram PDF Error:", telegramPDFResult.reason);
       }
 
       // If at least one succeeded, consider it a success
-      if (emailSuccess || telegramSuccess) {
+      if (emailSuccess || telegramMessageSuccess || telegramPDFSuccess) {
         return { success: true, message: "Thank you! We'll be in touch." };
       } else {
         return { message: "Error sending message. Please try again or contact us directly." };
