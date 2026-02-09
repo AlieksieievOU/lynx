@@ -46,7 +46,7 @@ There are two methods to get your group's Chat ID:
 #### Method A: Using @RawDataBot (Easiest)
 
 1. Add `@RawDataBot` to your group
-2. The bot will immediately send a message showing the **Chat ID** (e.g., `-1001234567890`)
+2. The bot will immediately send a message showing the **Chat ID** (e.g., `-1003821640226`)
 3. Copy the Chat ID
 4. Remove `@RawDataBot` from the group (you don't need it anymore)
 
@@ -57,7 +57,7 @@ There are two methods to get your group's Chat ID:
    ```
    https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates
    ```
-3. Look for `"chat":{"id":-1001234567890}` in the JSON response
+3. Look for `"chat":{"id":-1003821640226}` in the JSON response
 4. Copy the Chat ID (the negative number)
 
 ### Step 4: Configure Environment Variables
@@ -67,7 +67,7 @@ Add these variables to your `.env` file:
 ```env
 # Telegram Bot Configuration
 VITE_TELEGRAM_BOT_TOKEN=123456789:ABCdefGhIjKlmNoPqRsTuVwXyZ
-VITE_TELEGRAM_CHAT_ID=-1001234567890
+VITE_TELEGRAM_CHAT_ID=-1003821640226
 ```
 
 **Important Notes:**
